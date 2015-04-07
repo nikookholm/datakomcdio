@@ -1,114 +1,70 @@
 package Common;
+
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
-public class TCPConnector implements Runnable {
+public class TCPConnector {
 	
-	private int				  port;
-	private ServerSocket	  tcpServer;
-	private ArrayList<String> receivedData;
-	private Socket			  tcpClient;
+	private String 	host;
+	private int		port;
+	public Socket	tcpClient;
 	
-	public TCPConnector(int port)
+	public TCPConnector(String host, int port)
 	{
+		this.host = host;
 		this.port = port;
-		
-		try {
-			connect();
-		} catch (Exception e) {}
 	}
 	
 	public boolean connect() throws Exception
 	{
-		tcpServer = new ServerSocket(port);
-		tcpServer.setSoTimeout(10000);
-		receivedData = new ArrayList<String>();
-		
-		return !tcpServer.isClosed();
+		tcpClient = new Socket(host, port);
+		return tcpClient.isConnected();
 	}
 	
 	public boolean disconnect()
 	{
-		try {
-			tcpServer.close();
-		}
-		catch (IOException e) {}
-		
-		return !tcpServer.isClosed();
-	}
-	
-	public void run()
-	{
-		
-		while (tcpClient == null)
+		try
 		{
-			waitForClient();
-		}
-		
-		while (tcpClient != null)
-		{
-			listenForData();
-		}
-		
-	}
-	
-	public void waitForClient()
-	{
-		while (tcpClient == null)
-		{
-			try
+			if (tcpClient.isConnected())
 			{
-				tcpClient = tcpServer.accept();
-			} catch (IOException e) {}
-		}
-	}
-	
-	public void listenForData()
-	{
-		String readString = null;
-		
-		if (!tcpServer.isClosed())
-		{
-			try
-			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));
-				while (readString == null)
-				{
-					readString = reader.readLine();
-					receivedData.add(readString);
-				}
+				tcpClient.close();
 			}
-			catch (Exception e) {}
 		}
+		catch (Exception e) {}
+		return tcpClient.isClosed();
 	}
 	
 	public void send(String data)
 	{
 		try
 		{
-			if ((!tcpServer.isClosed()) && (tcpClient != null))
+			if (tcpClient.isConnected())
 			{
 				DataOutputStream dataOut = new DataOutputStream(tcpClient.getOutputStream());
-		
-				dataOut.writeBytes(data + "\r\n");
-				dataOut.flush();
+			
+				dataOut.writeBytes(data);
 			}
 		}
 		catch (Exception e) {}
 	}
 	
-	
-	public String getReceivedData()
+	public String receive()
 	{
-		String data = null;
-		if (receivedData.size() > 0)
-		{
-			data = receivedData.get(0);
-			receivedData.remove(0);
-		}
+		String readString = null;
 		
-		return data;
+		try
+		{
+			if (tcpClient.isConnected())
+			{
+				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));
+				while (readString == null)
+				{
+					readString = reader.readLine();
+				}
+			}
+		}
+		catch (Exception e) {}
+		
+		return readString;
 	}
-	
 }
