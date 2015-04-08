@@ -1,0 +1,5 @@
+text1,10
+text2,20
+text4,20
+text3,10
+text5,20
