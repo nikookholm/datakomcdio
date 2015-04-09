@@ -36,11 +36,16 @@ public class TUI {
 	
 	public void listFiles(ArrayList<String> files)
 	{
+		System.out.println("Alle filer på FTP serveren:");
 		
-		for (String file : files)
+		for (int i = 0; i < files.size(); i++)
 		{
-			System.out.println(file);
+			System.out.println("  " + (i+1) + ": " + files.get(i));
 		}
+		
+		System.out.println("\nFor at hente fil, indtast filens nummer, eller tryk enter ...");
+		
+		String input = scanner.next();
 		
 	}
 	
