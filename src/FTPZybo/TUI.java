@@ -7,7 +7,7 @@ public class TUI {
 	
 	private Scanner scanner = new Scanner(System.in);
 	
-	public int printMenu()
+	public String printMenu()
 	{
 		System.out.println("***********************************************");
 		System.out.println("*                                             *");
@@ -31,15 +31,32 @@ public class TUI {
 		
 		System.out.println("Indtast valg: ");		
 		
-		return scanner.nextInt();
+		return scanner.nextLine();
 	}
 	
 	public void listFiles(ArrayList<String> files)
 	{
+		System.out.println("Alle filer på FTP serveren:");
 		
-		for (String file : files)
+		for (int i = 0; i < files.size(); i++)
 		{
-			System.out.println(file);
+			System.out.println("  " + (i+1) + ": " + files.get(i));
+		}
+		
+		System.out.println("\nFor at hente fil, indtast filens nummer, eller tryk enter ...");
+		
+		String input = scanner.nextLine();
+		int fileNumber = -1;
+		
+		try
+		{
+			fileNumber = Integer.parseInt(input);
+		} catch (Exception e) {}
+		
+		if ((fileNumber > 0) && (fileNumber <= files.size()))
+		{
+			System.out.println("Henter fil ... ");
+			//SuperSpændendeDownloadFilFraFTPKLIENT METODE
 		}
 		
 	}
