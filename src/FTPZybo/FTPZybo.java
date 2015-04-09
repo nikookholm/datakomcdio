@@ -19,16 +19,18 @@ public class FTPZybo {
 		this.tui  = tui;
 		this.zybo = zybo;
 		//this.ftp  = ftp;
-		
-		operations(tui.printMenu());
+		while (true)
+		{
+			operations(tui.printMenu());
+		}
 	}
 	
 	
-	public void operations(int menuChoice)
+	public void operations(String menuChoice)
 	{
 		
 		switch (menuChoice) {
-		case 1:
+		case "1":
 			ArrayList<String> files = new ArrayList<String>();
 			files.add("File 1");
 			files.add("File 2");

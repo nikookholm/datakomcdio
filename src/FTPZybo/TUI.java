@@ -7,7 +7,7 @@ public class TUI {
 	
 	private Scanner scanner = new Scanner(System.in);
 	
-	public int printMenu()
+	public String printMenu()
 	{
 		System.out.println("***********************************************");
 		System.out.println("*                                             *");
@@ -31,7 +31,7 @@ public class TUI {
 		
 		System.out.println("Indtast valg: ");		
 		
-		return scanner.nextInt();
+		return scanner.nextLine();
 	}
 	
 	public void listFiles(ArrayList<String> files)
@@ -45,7 +45,19 @@ public class TUI {
 		
 		System.out.println("\nFor at hente fil, indtast filens nummer, eller tryk enter ...");
 		
-		String input = scanner.next();
+		String input = scanner.nextLine();
+		int fileNumber = -1;
+		
+		try
+		{
+			fileNumber = Integer.parseInt(input);
+		} catch (Exception e) {}
+		
+		if ((fileNumber > 0) && (fileNumber <= files.size()))
+		{
+			System.out.println("Henter fil ... ");
+			//SuperSpændendeDownloadFilFraFTPKLIENT METODE
+		}
 		
 	}
 	
