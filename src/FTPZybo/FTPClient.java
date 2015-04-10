@@ -9,14 +9,14 @@ import Common.TCPConnector;
 public class FTPClient {
 
 	private ArrayList 	files = new ArrayList();
-	private String 		host = "localhost";
+	private String 		host;
 	private int 		port = 21;
 	private TCPConnector tcp = new TCPConnector(host, port); 
 	private String 		read = null;
 	
 	//
-	private FTPClient(){
-	
+	public FTPClient(String hostAddress){
+		host = hostAddress;
 	}
 	
 	//returns infomation about the current file or directory
