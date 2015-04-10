@@ -8,6 +8,7 @@ public class Zybo {
 	int[]	  sensorsValues = new int[16];
 	boolean[] sensorsActive = new boolean[16];
 	
+        
 	public Zybo()
 	{
 		for (int i = 0 ; i < sensorsValues.length; i++)
@@ -31,7 +32,6 @@ public class Zybo {
 	{
 		if ((sensorsActive[sensorNumber]) && (sensorNumber >= 0) && (sensorNumber <= 15))
 		{
-			System.out.println(value + "<--------------------------------------");
 			sensorsValues[sensorNumber] = value;
 		}
 	}
@@ -48,7 +48,7 @@ public class Zybo {
 	{
 		ArrayList<Integer> sensorsList = new ArrayList<Integer>();
 		
-		for (int i = 0 ; i <= sensorsValues.length; i++)
+		for (int i = 0 ; i < sensorsValues.length; i++)
 		{
 			sensorsList.add(i);
 		}
