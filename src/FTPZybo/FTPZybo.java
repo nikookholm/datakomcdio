@@ -37,9 +37,14 @@ public class FTPZybo {
 			
 			tui.listFiles(files);
 		break;
-
+		case "2":
+			zybo.writeToSensor(tui.writeSensor(), 1);
+		break;
+		case "3":
+			int readValue = zybo.readFromSensor(tui.readFromSensor());
+		break;
 		default:
-			break;
+		break;
 		}
 		
 	}

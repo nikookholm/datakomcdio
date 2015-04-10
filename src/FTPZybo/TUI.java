@@ -66,24 +66,43 @@ public class TUI {
 		System.out.println(message);
 	}
 	
-	public int readFromSensor(int sensorNumber)
+	public int readFromSensor()
 	{
-		//return Zybo.readSensor(sensorNumber); 
-		return 0;
+		int returnValue = -1;
+		while ((returnValue < 0) || (returnValue > 15))
+		{
+			System.out.println("Indtast sensornummer mellem 0 og 15:");
+			try
+			{
+				returnValue = Integer.parseInt(scanner.nextLine());
+			} catch (Exception e) {}
+		}
+		
+		return returnValue;
+		
 	}
 	
-	public void writeSensor(int sensorNumber)
+	public int writeSensor()
 	{
-		System.out.println("Send to sensor:");
-		int input = scanner.nextInt();
-		//Zybo.writeSensor(sensorNumber, input);
+		int returnValue = -1;
+		while ((returnValue < 0) || (returnValue > 15))
+		{
+			System.out.println("Indtast sensornummer (mellem 0 og 15) som skal sendes værdi(1) til:");
+			try
+			{
+				returnValue = Integer.parseInt(scanner.nextLine());
+			} catch (Exception e) {}
+		}
+		
+		return returnValue;
+	
 	}
 	
 	public void listAllSensors(ArrayList<Integer> sensors)
 	{
 		for (int sensor : sensors)
 		{
-			System.out.println("Sensor nr: " + sensor);
+			System.out.println("Aktive sensorer - Sensor nr: " + sensor);
 		}
 	}
 
