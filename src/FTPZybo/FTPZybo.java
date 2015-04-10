@@ -38,10 +38,29 @@ public class FTPZybo {
 			tui.listFiles(files);
 		break;
 		case "2":
-			zybo.writeToSensor(tui.writeSensor(), 1);
+			int sensorNumberW = tui.writeSensor();
+			zybo.writeToSensor(sensorNumberW, 1);
+			tui.printMessage("Skrevet værdi (1) til sensor " + sensorNumberW);
 		break;
 		case "3":
-			int readValue = zybo.readFromSensor(tui.readFromSensor());
+			int sensorNumberR = tui.readFromSensor();
+			int readValue = zybo.readFromSensor(sensorNumberR);
+			tui.printMessage("Læst fra sensor " + sensorNumberR + " - Værdi: " + readValue);
+		break;
+		case "4":
+			int sensorNumberSS = tui.readFromSensor();
+			zybo.setSensorStatus(sensorNumberSS, true);
+		break;
+		case "5":
+			int sensorNumberSS2 = tui.readFromSensor();
+			zybo.setSensorStatus(sensorNumberSS2, false);
+		break;
+		case "6":
+			tui.listAllSensors(zybo.listAllSensors());
+		break;
+		case "0":
+			tui.printMessage("Programmet er afsluttet! - God dag!");
+			System.exit(0);
 		break;
 		default:
 		break;

@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Zybo {
 	
-	int[] sensorsValues = new int[16];
+	int[]	  sensorsValues = new int[16];
 	boolean[] sensorsActive = new boolean[16];
 	
 	public Zybo()
@@ -31,6 +31,7 @@ public class Zybo {
 	{
 		if ((sensorsActive[sensorNumber]) && (sensorNumber >= 0) && (sensorNumber <= 15))
 		{
+			System.out.println(value + "<--------------------------------------");
 			sensorsValues[sensorNumber] = value;
 		}
 	}
