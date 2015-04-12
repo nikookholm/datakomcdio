@@ -57,7 +57,7 @@ public class TCPConnector {
 		{
 			if (tcpClient.isConnected())
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream(), "UTF-8"));
 				while (readString == null)
 				{
 					readString = reader.readLine();
