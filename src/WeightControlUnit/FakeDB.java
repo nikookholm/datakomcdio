@@ -32,6 +32,7 @@ public class FakeDB {
 			loadList();
 		} catch (IOException e) {
 		     System.out.println("Database filen findes ikke");
+                     
 		}
 	}
 
@@ -51,7 +52,7 @@ public class FakeDB {
 		try {
 
 			StringBuilder sb = new StringBuilder();
-			FileInputStream textIn =  new FileInputStream("store.txt");
+			FileInputStream textIn =  new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
 			BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
 
 			try{
@@ -64,7 +65,7 @@ public class FakeDB {
 			catch(Exception e){// skal nok se på en bedre  exception.
 				System.out.println("råvare kan ikke findes");
 			}
-			FileWriter fstreamWrite = new FileWriter("store.txt");
+			FileWriter fstreamWrite = new FileWriter("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
 			BufferedWriter out = new BufferedWriter(fstreamWrite);
 			out.write(sb.toString());
 			out.close(); // closes writer
@@ -78,10 +79,10 @@ public class FakeDB {
 	}
 
 	public void loadList() throws IOException{
-		String[] items = new String[8];
+		String[] items = new String[16];
 		String[] parts;
 
-		FileInputStream textIn =  new FileInputStream("store.txt");
+		FileInputStream textIn =  new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
 		int i = 0;
 		String lineRead;
