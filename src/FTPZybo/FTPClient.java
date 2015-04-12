@@ -51,9 +51,11 @@ public class FTPClient {
 			System.out.println("Host: " + host);
 			TCPConnector tcp2 = new TCPConnector("Localhost", otherPort);
 			tcp2.connect();
+			
+			read2 = tcp2.receive();
 			read2 = tcp2.receive();
 			System.out.println("Server2: " + read2);
-			
+		
 			read = tcp.receive();
 			System.out.println("Server: " + read);
 			
