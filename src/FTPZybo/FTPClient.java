@@ -47,8 +47,8 @@ public class FTPClient {
 			//Sends a list of files in the current directory
 			tcp.send("LIST\r\n");
 			System.out.println("Client: LIST");
-			read = tcp.receive();
-			System.out.println("---Server: " + read);
+			//read = tcp.receive();
+			System.out.println("Server: " + read);
 			
 			// Åbn dataforbindelse
 			System.out.println("Host: " + host);
@@ -57,15 +57,11 @@ public class FTPClient {
 			
 			read = tcp.receive();
 			System.out.println("Server: " + read);
+			
+			read2 = tcp2.receive();
+			System.out.println("Server2: " + read2);
+			
 
-			System.out.println("!!!");
-			read2 = tcp2.receive();
-			System.out.println("Server2: " + read2);
-			System.out.println("---" + tcp2.tcpClient.isConnected());
-			read2 = tcp2.receive();
-			System.out.println("Server2: " + read2);
-			
-			
 			//ls = read;
 
 		}catch(IOException e){
