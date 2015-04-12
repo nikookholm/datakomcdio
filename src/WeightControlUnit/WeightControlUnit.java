@@ -40,7 +40,7 @@ public class WeightControlUnit {
                checkItem();
             System.out.println("Hertil");
             SendInstruction("Hej");
-            //    ChangeAmount(1,1);
+            
         }
     }
 
@@ -59,34 +59,49 @@ public class WeightControlUnit {
         
         Items Item = DB.getItem(itemNo);
         TCPC.send("D \""+ Item.getItemName() +" \" \r\n");
+        CorrectItem(Item);
     
     }
 
     public void SendInstruction(String instruc) {
         System.out.println("Her");
         TCPC.send("D \"Hi\" \r \n");
+        TCPC.receive();
 
     }
 
-    public void ChangeAmount(int itemNumber, int amount) {
-        Items Item = DB.getItem(itemNumber);
-        if (!TUI.CorrectItem(Item)) {
-            OperateWeight();
+    public void ChangeAmount(Items Item) {
+       
+        double previousAmount = Item.getAmount();
+        TCPC.send("S\r\n");
+        String inc_weight = TCPC.receive();
+        String[] weight_array = inc_weight.split(" ");
+        double weight = Double.parseDouble(weight_array[2]); 
+        
+        DB.changeAmount(Item.getItemName(), weight);
+        try{
+        DB.changeStoreText();
+        }catch(Exception E ){
+            
         }
-        TUI.ChangeAmount(Item);
+        
     }
 
     public void CorrectItem(Items Item) {
-        TCPC.send("RM20 8 \"Correct item? \"  \"text2 \" \"&3 \"\r\n");
-        TCPC.receive();
+        TCPC.send("RM20 8 \""+ Item.getItemName() +"\"  \"correct? \" \"&3 \"\r\n");
+   
         System.out.println("The item you got was " + Item.getItem());
         System.out.println("The amount: " + Item.getAmount());
         System.out.println("Item number: " + Item.getItemNo());
+        String temp1 =TCPC.receive();
         String temp = TCPC.receive();
+        System.out.println(temp1);
+        System.out.println(temp);
         if(!temp.equals("Yes")){
             
         checkItem();
         }
+        ChangeAmount(Item);
         
     }
 

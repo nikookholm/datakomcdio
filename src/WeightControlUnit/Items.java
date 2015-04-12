@@ -5,7 +5,7 @@ package WeightControlUnit;
 public class Items {
 
 	String item;
-	int amount;
+	double amount;
 	int itemNo;
 
 	public Items(int itemNo, String item, int amount){
@@ -18,14 +18,14 @@ public class Items {
 		return item;
 	}
 
-	public int getAmount(){
+	public double getAmount(){
 		return amount;
 	}
 	public String toString(){
 		return itemNo + " " + item + " " + amount;
 	}
 
-	public void setAmount(int amount){
+	public void setAmount(double amount){
 		this.amount = amount;
 	}
 	public int getItemNo(){

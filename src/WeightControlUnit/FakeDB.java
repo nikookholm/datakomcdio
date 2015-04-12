@@ -100,7 +100,7 @@ public class FakeDB {
 		br.close();
 	}
 
-	public void changeAmount(String items,int amount){
+	public void changeAmount(String items,double amount){
 		for (int i = 0; i < stock.size(); i++) {
 			if(items.equals(stock.get(i).getItem())){
 				stock.get(i).setAmount(amount);
