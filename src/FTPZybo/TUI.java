@@ -38,11 +38,6 @@ public class TUI {
 	{
 		System.out.println("Alle filer på FTP serveren:");
 		
-		for (int i = 0; i < files.size(); i++)
-		{
-			System.out.println("  " + (i+1) + ": " + files.get(i));
-		}
-		
 		System.out.println("\nFor at hente fil, indtast filens nummer, eller tryk enter ...");
 		
 		String input = scanner.nextLine();

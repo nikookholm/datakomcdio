@@ -2,6 +2,7 @@ package Common;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
 
 public class TCPConnector {
 	
@@ -56,7 +57,7 @@ public class TCPConnector {
 		{
 			if (tcpClient.isConnected())
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream(), "UTF-8"));
 				while (readString == null)
 				{
 					readString = reader.readLine();
