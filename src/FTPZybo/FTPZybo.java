@@ -9,8 +9,18 @@ public class FTPZybo {
 	private FTPClient ftp;
 
 	public static void main(String[] args) {
+	
 		
-		FTPZybo fz = new FTPZybo(new TUI(), new Zybo(), new FTPClient("localhost"));
+//		if (args.length > 1)
+//		{
+//			String host = args[0];
+			String host = "localhost";
+			FTPZybo fz = new FTPZybo(new TUI(), new Zybo(), new FTPClient(host));
+//		}
+//		else
+//		{
+//			System.out.println("Du har ikke angivet IP adresse til FTP serveren som det første argument, programmet lukkes!");
+//		}
 
 	}
 	
