@@ -9,6 +9,12 @@ public class WeightControlUnit {
     boolean		 loggedIn = false;
     //WCU_TUI TUI = new WCU_TUI();
     
+    public static void main(String[] args) {
+
+        WeightControlUnit WCU = new WeightControlUnit();
+
+    }
+    
     public WeightControlUnit() {
         DB   = new FakeDB();
         TCPC = new TCPConnector("localhost", 4567);
@@ -18,13 +24,6 @@ public class WeightControlUnit {
         } catch (Exception E) {}
         
         OperateWeight();
-
-    }
-    
-
-    public static void main(String[] args) {
-
-        WeightControlUnit WCU = new WeightControlUnit();
 
     }
 

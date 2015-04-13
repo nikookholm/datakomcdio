@@ -24,6 +24,9 @@ public class FakeDB {
 	private	String			 path;
 	private boolean			 append = false;
 	private ArrayList<Items> stock  = new ArrayList<Items>();
+	private String			 filepathEclipse   = "";
+	private String			 filepathNeetbeans = "C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/";
+	private String			 filepath = filepathEclipse;
 
 	// konstruktør til at skrive i loggen, denne fil skal altid forlænges
 	public FakeDB(){
@@ -48,7 +51,7 @@ public class FakeDB {
 		try {
 
 			StringBuilder	sb	   = new StringBuilder();
-			FileInputStream textIn = new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
+			FileInputStream textIn = new FileInputStream(filepath + "store.txt");
 			BufferedReader	br	   = new BufferedReader(new InputStreamReader(textIn));
 
 			try{
@@ -62,7 +65,7 @@ public class FakeDB {
 			catch(Exception e){// skal nok se på en bedre  exception.
 				System.out.println("råvare kan ikke findes");
 			}
-			FileWriter fstreamWrite = new FileWriter("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
+			FileWriter fstreamWrite = new FileWriter(filepath + "store.txt");
 			BufferedWriter out = new BufferedWriter(fstreamWrite);
 			out.write(sb.toString());
 			
@@ -79,7 +82,7 @@ public class FakeDB {
 		String[] items = new String[16];
 		String[] parts;
 
-		FileInputStream textIn =  new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
+		FileInputStream textIn =  new FileInputStream(filepath + "store.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
 		int i = 0;
 		
