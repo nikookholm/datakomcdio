@@ -82,7 +82,8 @@ public class FTPClient {
 
 	//downloads the specified file from the server
 	//RETR
-	public ArrayList<String> retr(String str){
+	public boolean retr(String str){
+		boolean bool = false;
 		ArrayList<String> file = new ArrayList<String>();
 		ArrayList<String> list = new ArrayList<String>();
 		int otherPort 	= 0;
@@ -102,7 +103,6 @@ public class FTPClient {
 			//Calculating IP address and port number
 			if(read.isEmpty()==false){
 				otherPort = calculatePort(read);
-				System.out.println("Calculates new port " + otherPort);
 			}
 			
 			//Initiates retreval of file
@@ -129,10 +129,10 @@ public class FTPClient {
 		}
 			tcp.disconnect();
 			
-			return file;
+			return bool;
 	}
-
-
+	
+	
 	//Opretter forbindelse til FTP-serveren og logger ind med bruger og kodeord
 	private void initiateConnection(){
 		String 	user = "user\r\n";
