@@ -12,8 +12,8 @@ public class TestFTPClient {
 		ArrayList<String> arg = new ArrayList<String>();
 		
 		try {
-			//ftp.list();
-			ftp.retr(str);
+			ftp.list();
+			//ftp.retr(str);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

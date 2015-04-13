@@ -1,6 +1,7 @@
 package FTPZybo;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +14,7 @@ public class FTPClient {
 	private ArrayList 	filesLs = new ArrayList();
 	private String 		host;
 	private int 		port = 21;
-	private TCPConnector tcp = new TCPConnector(host, port); 
+	private TCPConnector tcp = new TCPConnector(host, port);
 	private String h1, p1, p2;
 	
 	//
@@ -41,7 +42,6 @@ public class FTPClient {
 			//Calculating IP address and port number
 			if(read.isEmpty()==false){
 				otherPort = calculatePort(read);
-				System.out.println("Calculates new port " + otherPort);
 			}
 			//Sends a list of files in the current directory
 			tcp.send("LIST\r\n");
@@ -83,14 +83,17 @@ public class FTPClient {
 	//downloads the specified file from the server
 	//RETR
 	public boolean retr(String str){
+		str = "testting.txt"; //Korrekt
+		//str = "fejl.txt";
 		boolean bool = false;
-		ArrayList<String> file = new ArrayList<String>();
-		ArrayList<String> list = new ArrayList<String>();
 		int otherPort 	= 0;
 		String read 	= "";
 		String read2 	= "";
-		str = "testting.txt"; //Korrekt
-		//str = "fejl.txt";
+		String strName 	= str;
+		String type;
+		
+		type = str.substring(str.indexOf('.'));
+		File file = new File(strName);
 		
 		try{
 			initiateConnection();
@@ -111,19 +114,32 @@ public class FTPClient {
 			read = tcp.receive();
 			System.out.println("Server: " + read);
 		
+			System.out.println("Opretter dataconnection");
 			TCPConnector tcp2 = new TCPConnector(host, otherPort);
 			tcp2.connect();
-			
+			System.out.println("Har oprettet dataconnection");
+			/*
 			read = tcp.receive();
 			System.out.println("Server: " + read);
-			
+		 	
 			read2 = tcp2.receive();
 			System.out.println("Server2: " + read2);
+			
+			try {
+				System.out.println("Opretter og skriver fil");
+				FileWriter writer = new FileWriter(file);
+				writer.write(str);
+				writer.close();
+			} catch (IOException e1) {
+				System.out.println("Fail");
+				e1.printStackTrace();
+			}
+			System.out.println("Jeg disconnecter");
 			tcp2.disconnect();
 			
 			read = tcp.receive();
 			System.out.println("Server: " + read);
-			
+			*/
 		}catch(Exception e){
 			e.printStackTrace();
 		}
