@@ -41,11 +41,7 @@ public class FTPZybo {
 		
 		switch (menuChoice) {
 		case "1":
-			ArrayList<String> files = new ArrayList<String>();
-			files.add("File 1");
-			files.add("File 2");
-			
-			tui.listFiles(files);
+			tui.listFiles(ftp.list());
 		break;
 		case "2":
 			int sensorNumberW = tui.writeSensor();
