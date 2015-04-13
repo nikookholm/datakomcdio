@@ -20,11 +20,10 @@ import java.util.ArrayList;
  */
 
 public class FakeDB {
-	private String path;
-	private boolean append = false;
-	private ArrayList<Items> stock = new ArrayList<Items>();
-
-	// der skal være en metode til at skrive på logfilen, og en metode til at skrive på store filen.
+	
+	private	String			 path;
+	private boolean			 append = false;
+	private ArrayList<Items> stock  = new ArrayList<Items>();
 
 	// konstruktør til at skrive i loggen, denne fil skal altid forlænges
 	public FakeDB(){
@@ -32,11 +31,8 @@ public class FakeDB {
 			loadList();
 		} catch (IOException e) {
 		     System.out.println("Database filen findes ikke");
-                     
 		}
 	}
-
-
 
 	public void logWriter(String text) throws IOException{
 		FileWriter fw = new FileWriter(path, append);
@@ -51,9 +47,9 @@ public class FakeDB {
 	public void changeStoreText() throws IOException{
 		try {
 
-			StringBuilder sb = new StringBuilder();
-			FileInputStream textIn =  new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
+			StringBuilder	sb	   = new StringBuilder();
+			FileInputStream textIn = new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
+			BufferedReader	br	   = new BufferedReader(new InputStreamReader(textIn));
 
 			try{
 
@@ -61,6 +57,7 @@ public class FakeDB {
 					sb.append(stock.get(i).getItemNo() + "," + stock.get(i).getItem() + "," + stock.get(i).getAmount() );
 					sb.append("\n");
 				}
+				
 			}
 			catch(Exception e){// skal nok se på en bedre  exception.
 				System.out.println("råvare kan ikke findes");
@@ -68,8 +65,8 @@ public class FakeDB {
 			FileWriter fstreamWrite = new FileWriter("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
 			BufferedWriter out = new BufferedWriter(fstreamWrite);
 			out.write(sb.toString());
+			
 			out.close(); // closes writer
-
 
 			textIn.close(); //This closes inputStream
 
@@ -85,6 +82,7 @@ public class FakeDB {
 		FileInputStream textIn =  new FileInputStream("C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/store.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
 		int i = 0;
+		
 		String lineRead;
 		while((lineRead = br.readLine()) != null){
 			items[i] = lineRead;
@@ -97,6 +95,7 @@ public class FakeDB {
 			int amount = Integer.parseInt(parts[2]);
 			stock.add(new Items(itemNo,parts[1],amount));
 		}
+		
 		br.close();
 	}
 
@@ -113,8 +112,8 @@ public class FakeDB {
 			if(itemNo == stock.get(i).getItemNo()){
 				return stock.get(i);
 			}
-
 		}
+		
 		return null;
 	}
 

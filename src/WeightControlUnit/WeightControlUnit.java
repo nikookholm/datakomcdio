@@ -4,10 +4,6 @@ import Common.*;
 
 public class WeightControlUnit {
 
-    //private int password = 1234;
-    //private int cOprNR = 22;
-    //private int oprNR;
-    
     FakeDB 		 DB;
     TCPConnector TCPC;
     boolean		 loggedIn = false;
