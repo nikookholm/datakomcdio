@@ -20,6 +20,7 @@ public class FTPClient {
 	//
 	public FTPClient(String hostAddress){
 		host = hostAddress;
+		System.out.println("FTP constructor host: " + host);
 	}
 	
 	//returns infomation about the current file or directory
@@ -83,7 +84,7 @@ public class FTPClient {
 	//downloads the specified file from the server
 	//RETR
 	public boolean retr(String str){
-		str = "testting.txt"; //Korrekt
+		//str = "testting.txt"; //Korrekt
 		//str = "fejl.txt";
 		boolean bool = false;
 		int otherPort 	= 0;
@@ -93,7 +94,6 @@ public class FTPClient {
 		String type;
 		
 		type = str.substring(str.indexOf('.'));
-		File file = new File(strName);
 		
 		try{
 			initiateConnection();
@@ -109,7 +109,7 @@ public class FTPClient {
 			}
 			
 			//Initiates retreval of file
-			tcp.send("RETR " + str);
+			tcp.send("RETR " + str + "\r\n");
 			System.out.println("Client: RETR " + str + "\r\n");
 			read = tcp.receive();
 			System.out.println("Server: " + read);
@@ -118,28 +118,25 @@ public class FTPClient {
 			TCPConnector tcp2 = new TCPConnector(host, otherPort);
 			tcp2.connect();
 			System.out.println("Har oprettet dataconnection");
-			/*
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-		 	
+			
 			read2 = tcp2.receive();
-			System.out.println("Server2: " + read2);
+			System.out.println("Server2 read2: " + read2);
 			
 			try {
-				System.out.println("Opretter og skriver fil");
+				System.out.println("Opretter fil...");
+				File file = new File(strName);
 				FileWriter writer = new FileWriter(file);
-				writer.write(str);
+				writer.write(read2);
 				writer.close();
 			} catch (IOException e1) {
-				System.out.println("Fail");
 				e1.printStackTrace();
 			}
-			System.out.println("Jeg disconnecter");
+			System.out.println("Jeg disconnecter dataforbindelsen");
 			tcp2.disconnect();
 			
 			read = tcp.receive();
 			System.out.println("Server: " + read);
-			*/
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
