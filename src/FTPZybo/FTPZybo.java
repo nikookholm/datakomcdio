@@ -41,7 +41,11 @@ public class FTPZybo {
 		
 		switch (menuChoice) {
 		case "1":
-			tui.listFiles(ftp.list());
+			String getFile = tui.listFiles(ftp.list());
+			if (getFile != null)
+			{
+				tui.downloadStatus(ftp.retr(getFile), getFile);
+			}
 		break;
 		case "2":
 			int sensorNumberW = tui.writeSensor();

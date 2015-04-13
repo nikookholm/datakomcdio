@@ -34,7 +34,7 @@ public class TUI {
 		return scanner.nextLine();
 	}
 	
-	public void listFiles(ArrayList<String> files)
+	public String listFiles(ArrayList<String> files)
 	{
 		System.out.println("Alle filer på FTP serveren:");
 		
@@ -55,8 +55,12 @@ public class TUI {
 		
 		if ((fileNumber > 0) && (fileNumber <= files.size()))
 		{
-			System.out.println("Henter fil ... ");
-			//SuperSpændendeDownloadFilFraFTPKLIENT METODE
+			int splitHere = files.get(fileNumber).lastIndexOf(" ");
+			return files.get(fileNumber).substring(splitHere).trim();
+		}
+		else
+		{
+			return null;
 		}
 		
 	}
@@ -103,6 +107,18 @@ public class TUI {
 		for (int sensor : sensors)
 		{
 			System.out.println("Aktive sensorer - Sensor nr: " + sensor);
+		}
+	}
+	
+	public void downloadStatus(boolean status, String filename)
+	{
+		if (status)
+		{
+			System.out.println(filename + " er overført!");
+		}
+		else
+		{
+			System.out.println(filename + " kunne ikke hentes");
 		}
 	}
 
