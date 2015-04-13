@@ -69,8 +69,6 @@ public class TCPConnector {
 		}
 		catch (Exception e) {}
 		
-		System.out.println("receive(): Ude");
-		
-		return result;
+		return result.trim();
 	}
 }
