@@ -3,6 +3,7 @@ package Common;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 public class TCPConnector {
 	
@@ -19,6 +20,7 @@ public class TCPConnector {
 	public boolean connect() throws Exception
 	{
 		tcpClient = new Socket(host, port);
+		tcpClient.setSoTimeout(200);
 		return tcpClient.isConnected();
 	}
 	
@@ -52,20 +54,23 @@ public class TCPConnector {
 	public String receive()
 	{
 		String readString = null;
+		String result = "";
 		
 		try
 		{
 			if (tcpClient.isConnected())
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream(), "UTF-8"));
-				while (readString == null)
+				BufferedReader reader = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));
+				while ((readString = reader.readLine()) != null)
 				{
-					readString = reader.readLine();
+					result = result + "\r\n" + readString;
 				}
 			}
 		}
 		catch (Exception e) {}
 		
-		return readString;
+		System.out.println("receive(): Ude");
+		
+		return result;
 	}
 }
