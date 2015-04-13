@@ -71,6 +71,6 @@ public class TCPConnector {
 		
 		System.out.println("receive(): Ude");
 		
-		return result;
+		return result.trim();
 	}
 }
