@@ -64,7 +64,7 @@ public class FTPClient {
 			read = tcp.receive();
 			System.out.println("Server: " + read);
 			
-		}catch(IOException e){
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 			tcp.disconnect();
