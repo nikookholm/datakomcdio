@@ -79,25 +79,36 @@ public class FakeDB {
 	}
 
 	public void loadList() throws IOException{
-		String[] items = new String[16];
+		String[] items = new String[8];
 		String[] parts;
 
 		FileInputStream textIn =  new FileInputStream(filepath + "store.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
+		
+		
+	
+
+		
 		int i = 0;
 		
 		String lineRead;
 		while((lineRead = br.readLine()) != null){
 			items[i] = lineRead;
+			System.out.println(items[i]);
 			i++;
+		
 		}
 
 		for (int j = 0; j < items.length; j++) {
+			System.out.println("dette er  items " + items[j]);
+			System.out.println(items.length);
 			parts = items[j].split(",");
+		//	System.out.println(parts[0]);
 			int itemNo = Integer.parseInt(parts[0]);
-			int amount = Integer.parseInt(parts[2]);
+			double amount = Double.parseDouble(parts[2]);
 			stock.add(new Items(itemNo,parts[1],amount));
 		}
+		
 		
 		br.close();
 	}
