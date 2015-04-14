@@ -4,133 +4,200 @@ import Common.*;
 
 public class WeightControlUnit {
 
-    FakeDB 		 db;
+    FakeDB db;
     TCPConnector tcp;
-    boolean		 loggedIn = false;
+    boolean loggedIn = false;
     //WCU_TUI TUI = new WCU_TUI();
-    
+    int loggedOperator = 0;
+    double tarer = 0;
+   double brutto = 0;
+   Items Weight_item;
+
     public static void main(String[] args) {
 
         new WeightControlUnit();
 
     }
-    
+
     public WeightControlUnit() {
-        db   		= new FakeDB();
+        db = new FakeDB();
         String host = "localhost";
-        int    port = 4567;								// Skal sendes ned oppefra
-        tcp 		= new TCPConnector("localhost", 4567);
-        
+        int port = 4567;								// Skal sendes ned oppefra
+        tcp = new TCPConnector("localhost", 4567);
+
         try {
-            if (tcp.connect())
-            {
-            	System.out.println("Forbindelse oprettet til " + host + " (Port " + port + ")");
-            }            
+            if (tcp.connect()) {
+                System.out.println("Forbindelse oprettet til " + host + " (Port " + port + ")");
+            }
         } catch (Exception e) {
-        	System.out.println("Forbindelse kunne ikke oprettes ...");
+            System.out.println("Forbindelse kunne ikke oprettes ...");
         }
-        
+
         login();
         operateWeight();
 
     }
-    
-    private String rm20Request(int type, String text)
-    {
-    	String rm20RequestString = "RM20 " + type + " \"" + text + "\" \" \" \" \"\r\n";
-    	tcp.send("RM20 forspørgelse: " + rm20RequestString);
-    	System.out.println(rm20RequestString);
-    	
-    	System.out.println("RM20 svar: " + tcp.receive());
-    	
-    	String receivedAnswer = null;
-    	do
-    	{
-    		receivedAnswer = tcp.receive();
-    	} while (receivedAnswer.trim() == "");
-    	
-    	System.out.println("RM20 Svar: " + receivedAnswer);
-    	return receivedAnswer;
+
+    private String rm20Request(int type, String text) {
+        String rm20RequestString = "RM20 " + type + " \"" + text + "\" \" \" \" \"\r\n";
+        tcp.send(rm20RequestString);
+        System.out.println("RM20 forspørgelse: " + rm20RequestString);
+
+        System.out.println("RM20 svar: " + tcp.receive());
+
+        String receivedAnswer = null;
+        do {
+            receivedAnswer = tcp.receive();
+        } while (receivedAnswer.trim() == "");
+
+        System.out.println("RM20 Svar: " + receivedAnswer);
+        return receivedAnswer;
     }
 
     public boolean login() {
 
-	    String temp  = rm20Request(4, "Operator");
-        int    split = temp.lastIndexOf(" ");
-        
+        String temp = rm20Request(4, "Operator");
+        int split = temp.lastIndexOf(" ");
+
         try {
-            int oprNr = Integer.parseInt(temp.substring(split + 1));
+            loggedOperator = Integer.parseInt(temp.substring(split + 1));
             loggedIn = true;
             return true;
         } catch (Exception e) {
-        	loggedIn = false;
+            loggedIn = false;
             return false;
         }
 
     }
 
     public void operateWeight() {
-    	
-        while (loggedIn) {        	
-        	
+
+        while (loggedIn) {
+
             checkItem();
-            sendInstruction("Hej");
+            sendInstruction("Place bowl");
+            tarerWeight(true);
+            sendInstruction("Remove bowl");
+            NettoWeight();
+            sendInstruction("Remove tara and netto");
+            tarerWeight(false);
+            // Minus brutto
+            BruttoControl();
+             logItem();
+
+        }
+    }
+
+    public void tarerWeight(boolean save) {
+        tcp.send("T\r\n");
+        String inc_tarer = tcp.receive();
+        
+        if (save) {
+            int pos = inc_tarer.lastIndexOf(" ");
+            inc_tarer = inc_tarer.substring(0, pos);
+            pos = inc_tarer.lastIndexOf(" ");
+            inc_tarer = inc_tarer.substring(pos);
+            System.out.println(inc_tarer);
+            tarer = Double.parseDouble(inc_tarer);
+        }
+
+    }
+
+    public void NettoWeight() {
+        tcp.send("S\r\n");
+        String inc_brutto = tcp.receive();
+         int pos = inc_brutto.lastIndexOf(" ");
+            inc_brutto = inc_brutto.substring(0, pos);
+            pos = inc_brutto.lastIndexOf(" ");
+            inc_brutto = inc_brutto.substring(pos);
+            System.out.println(inc_brutto);
+        brutto = Double.parseDouble(inc_brutto);
+    }
+
+    public void logItem() {
+        double netto = brutto - tarer;
+        if(netto >= 0){
+            tcp.send("D \"BRUTTO KONTROL OK \"\r\n");
+            System.out.println(Weight_item.getAmount());
+            double totalRemaining = Weight_item.getAmount() - netto;
+            db.changeAmount(Weight_item.getItemName(), totalRemaining);
+        }else{
+            tcp.send("D \"FEJL \"\r\n");
+            
+        }
+        
+    }
+    
+    public void BruttoControl(){
+        String temp = rm20Request(8, brutto +" brutto korrekt? y/n");
+        String[] message = temp.split(" ");
+        if(!message[2].equals("y")){
+            
             
         }
     }
 
     public void checkItem() {
-    	
-    	int itemNo;
-    	
-        String temp = rm20Request(4, "ItemNumber");
+
+        int itemNo;
+
+        String temp = rm20Request(4, "Press item number");
         System.out.println("Modtaget svar: " + temp);
-        
+
         int split = temp.lastIndexOf(" ");
-        try
-        {
+        try {
             itemNo = Integer.parseInt(temp.substring(split + 1));
             Items item = db.getItem(itemNo);
-            tcp.send("D \""+ item.getItemName() +" \" \r\n");
+            if(item == null){
+                checkItem();
+            }
+            tcp.send("D \"" + item.getItemName() + " \" \r\n");
             correctItem(item);
-            
-        } catch (Exception e) {}
-    
+
+        } catch (Exception e) {
+        }
+
     }
 
     public void sendInstruction(String instruction) {
-        tcp.send("D \"" + instruction + "\" \r \n");
+        rm20Request(8, instruction);
         tcp.receive();
     }
 
     public void changeAmount(Items item) {
-       
+
         double previousAmount = item.getAmount();
         tcp.send("S\r\n");
-        
+
         String inc_weight = tcp.receive();
         String[] weight_array = inc_weight.split(" ");
-        
-        double weight = Double.parseDouble(weight_array[2]); 
-        
+
+        double weight = Double.parseDouble(weight_array[2]);
+
         db.changeAmount(item.getItemName(), weight);
-        try
-        {
-        	db.changeStoreText();
-        } catch (Exception e) {}
-        
+        try {
+            db.changeStoreText();
+        } catch (Exception e) {
+        }
+
     }
 
     public void correctItem(Items item) {
-    	
-        String temp = rm20Request(8, "CorrectItem?");
+
+        String temp = rm20Request(8, item.getItemName() + " correct item? y/n");
+        System.out.println("svar " + temp);
+        String[] message = temp.split(" ");
         
-        if(!temp.equals("Yes")){
-	        checkItem();
+                if (message[2].equals("y")) {
+                    System.out.println(item.getAmount() + " SVAAR");
+            Weight_item = item;
+             changeAmount(item);
+             
+             
         }
-        
-        changeAmount(item);
-        
+                checkItem();
+       
+
     }
 
 }
