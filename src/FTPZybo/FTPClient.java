@@ -18,12 +18,13 @@ public class FTPClient {
 	private int 		port = 21;
 	private String		user;
 	private String		pswd;
-	private TCPConnector tcp = new TCPConnector(host , port);
+	private TCPConnector tcp;
 	
 	public FTPClient(String hostAddress , String userName , String password){
-		host = hostAddress;
-		user = userName;
-		pswd = password;
+		this.host = hostAddress;
+		this.user = userName;
+		this.pswd = password;
+		tcp = new TCPConnector(host, port);
 	}
 	
 	//LIST
