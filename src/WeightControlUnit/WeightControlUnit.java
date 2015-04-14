@@ -148,8 +148,9 @@ public class WeightControlUnit {
     public void BruttoControl() {
         String temp = rm20Request(8, brutto + " brutto korrekt? y/n");
         String[] message = temp.split(" ");
-        if (!message[2].equals("y")) {
-            if (message[2].equals("n")) {
+        if (!message[2].trim().equals("y")) {
+        	
+            if (message[2].trim().equals("n")) {
                 checkItem();
             }
             BruttoControl();
