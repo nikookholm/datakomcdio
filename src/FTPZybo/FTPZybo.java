@@ -45,7 +45,7 @@ public class FTPZybo {
 		}
 	}
 	
-	public void operations(String menuChoice)
+	private void operations(String menuChoice)
 	{
 		
 		switch (menuChoice) {

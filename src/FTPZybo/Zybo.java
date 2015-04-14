@@ -5,10 +5,9 @@ import java.util.Random;
 
 public class Zybo {
 	
-	int[]	  sensorsValues = new int[16];
-	boolean[] sensorsActive = new boolean[16];
+	private int[]	  sensorsValues = new int[16];
+	private boolean[] sensorsActive = new boolean[16];
 	
-        
 	public Zybo()
 	{
 		for (int i = 0 ; i < sensorsValues.length; i++)
@@ -56,5 +55,4 @@ public class Zybo {
 		return sensorsList;
 	}
 	
-
 }
