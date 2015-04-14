@@ -16,38 +16,63 @@ public class WeightControlUnit {
     }
     
     public WeightControlUnit() {
-        DB   = new FakeDB();
-        TCPC = new TCPConnector("localhost", 4567);
+        DB   		= new FakeDB();
+        String host = "localhost";
+        int    port = 4567;								// Skal sendes ned oppefra
+        TCPC 		= new TCPConnector("localhost", 4567);
         
         try {
-            TCPC.connect();
-        } catch (Exception E) {}
+            if (TCPC.connect())
+            {
+            	System.out.println("Forbindelse oprettet til " + host + " (Port " + port + ")");
+            }            
+        } catch (Exception E) {
+        	System.out.println("Forbindelse kunne ikke oprettes ...");
+        }
         
+        login();
         OperateWeight();
 
+    }
+    
+    private String rm20Request(int type, String text)
+    {
+    	String rm20RequestString = "RM20 " + type + " \"" + text + "\" \" \" \" \"\r\n";
+    	TCPC.send("RM20 forspørgelse: " + rm20RequestString);
+    	System.out.println(rm20RequestString);
+    	
+    	System.out.println("RM20 svar: " + TCPC.receive());
+    	
+    	String receivedAnswer = null;
+    	do
+    	{
+    		receivedAnswer = TCPC.receive();
+    	} while (receivedAnswer.trim() == "");
+    	
+    	System.out.println("RM20 Svar: " + receivedAnswer);
+    	return receivedAnswer;
     }
 
     public boolean login() {
 
-        TCPC.send("RM20 4 \"Operator\" \"text2\" \"&3\"\r\n");
-        System.out.println("Operator sendt");
+	    String temp  = rm20Request(4, "Operator");
+        int    split = temp.lastIndexOf(" ");
         
-        TCPC.receive();
-        String temp = TCPC.receive();
-        
-        int split = temp.lastIndexOf(" ");
         try {
             int oprNR = Integer.parseInt(temp.substring(split + 1));
+            loggedIn = true;
             return true;
         } catch (Exception E) {
+        	loggedIn = false;
             return false;
         }
 
     }
 
     public void OperateWeight() {
+    	
         while (loggedIn) {
-        	
+            System.out.println("Here?");        	
             checkItem();
             SendInstruction("Hej");
             
@@ -58,10 +83,8 @@ public class WeightControlUnit {
     	
     	int itemNo;
     	
-    	TCPC.send("RM20 4 \"CheckItem\" \"text2\" \"&3\"\r\n");
-    	
-        TCPC.receive();
-        String temp = TCPC.receive();
+        String temp = rm20Request(4, "ItemNumber");
+        System.out.println("Modtaget svar: " + temp);
         
         int split = temp.lastIndexOf(" ");
         try {
@@ -69,7 +92,7 @@ public class WeightControlUnit {
             Items Item = DB.getItem(itemNo);
             TCPC.send("D \""+ Item.getItemName() +" \" \r\n");
             CorrectItem(Item);
-        }catch(Exception e){}
+        } catch (Exception e){}
     
     }
 
@@ -97,14 +120,7 @@ public class WeightControlUnit {
 
     public void CorrectItem(Items Item) {
     	
-        TCPC.send("RM20 8 \""+ Item.getItemName() +"\"  \"correct? \" \"&3 \"\r\n");
-   
-        System.out.println("The item you got was " + Item.getItem());
-        System.out.println("The amount: " + Item.getAmount());
-        System.out.println("Item number: " + Item.getItemNo());
-        
-        String temp1 =TCPC.receive();
-        String temp = TCPC.receive();
+        String temp = rm20Request(8, "CorrectItem?");
         
         if(!temp.equals("Yes")){
 	        checkItem();
