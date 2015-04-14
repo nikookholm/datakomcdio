@@ -24,6 +24,8 @@ public class WeightControlUnit {
         String host = "localhost";
         int port = 4567;								// Skal sendes ned oppefra
         tcp = new TCPConnector("localhost", 4567);
+        Thread input = new Thread(new InputThread(), "");
+        input.start();
 
         try {
             if (tcp.connect()) {
