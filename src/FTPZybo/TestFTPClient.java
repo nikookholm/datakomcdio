@@ -6,8 +6,8 @@ public class TestFTPClient {
 	
 	public static void main(String[] args) {
 		//String host = "1";
-		FTPClient ftp = new FTPClient("localhost");
-		String str = "pic.png";
+		FTPClient ftp = new FTPClient("localhost", "user", "qwerty");
+		String str = "testting.txt";
 		
 		ArrayList<String> arg = new ArrayList<String>();
 		

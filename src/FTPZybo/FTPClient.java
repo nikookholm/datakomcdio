@@ -56,7 +56,6 @@ public class FTPClient {
 			return ls;
 	}
 
-
 	//RETR
 	public boolean retr(String str){
 		boolean bool = false;
@@ -101,18 +100,16 @@ public class FTPClient {
 			return bool;
 	}
 	
-	
 	//Initiates connection to server and logs in with user and password
 	private void initiateConnection(String 	user, String pswd){
 		user = user + "\r\n";
 		pswd = pswd + "\r\n";
-		String	read = "";
 		
 		try {
 			tcp.connect();
 			tcp.send("USER " + user);
 			tcp.send("PASS " + pswd);
-			read = tcp.receive();
+			tcp.receive();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
