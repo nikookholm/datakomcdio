@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 
 public class FakeDB {
-	
+
 	private	String			 path;
 	private boolean			 append = false;
 	private ArrayList<Items> stock  = new ArrayList<Items>();
@@ -33,7 +33,7 @@ public class FakeDB {
 		try {
 			loadList();
 		} catch (IOException e) {
-		     System.out.println("Database filen findes ikke");
+			System.out.println("Database filen findes ikke");
 		}
 	}
 
@@ -60,7 +60,7 @@ public class FakeDB {
 					sb.append(stock.get(i).getItemNo() + "," + stock.get(i).getItem() + "," + stock.get(i).getAmount() );
 					sb.append("\n");
 				}
-				
+
 			}
 			catch(Exception e){// skal nok se på en bedre  exception.
 				System.out.println("råvare kan ikke findes");
@@ -68,7 +68,7 @@ public class FakeDB {
 			FileWriter fstreamWrite = new FileWriter(filepath + "store.txt");
 			BufferedWriter out = new BufferedWriter(fstreamWrite);
 			out.write(sb.toString());
-			
+
 			out.close(); // closes writer
 
 			textIn.close(); //This closes inputStream
@@ -84,32 +84,20 @@ public class FakeDB {
 
 		FileInputStream textIn =  new FileInputStream(filepath + "store.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(textIn));
-		
-		
-	
 
-		
 		int i = 0;
-		
 		String lineRead;
 		while((lineRead = br.readLine()) != null){
 			items[i] = lineRead;
-			System.out.println(items[i]);
 			i++;
-		
 		}
-
 		for (int j = 0; j < items.length; j++) {
-			System.out.println("dette er  items " + items[j]);
-			System.out.println(items.length);
 			parts = items[j].split(",");
-		//	System.out.println(parts[0]);
 			int itemNo = Integer.parseInt(parts[0]);
 			double amount = Double.parseDouble(parts[2]);
 			stock.add(new Items(itemNo,parts[1],amount));
 		}
-		
-		
+
 		br.close();
 	}
 
@@ -127,7 +115,7 @@ public class FakeDB {
 				return stock.get(i);
 			}
 		}
-		
+
 		return null;
 	}
 
