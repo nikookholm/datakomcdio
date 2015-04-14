@@ -7,7 +7,6 @@ public class WeightControlUnit {
     FakeDB db;
     TCPConnector tcp;
     boolean loggedIn = false;
-    //WCU_TUI TUI = new WCU_TUI();
     int loggedOperator = 0;
     double tarer = 0;
     double brutto = 0;
@@ -18,12 +17,10 @@ public class WeightControlUnit {
         int port = 4567;
         if (args.length > 0) {
             host = args[0];
-
         }
         try{
             if (args.length > 1) {
                 port = Integer.parseInt(args[1]);
-
             }
         } catch (NumberFormatException E) {
         }
@@ -57,7 +54,7 @@ public class WeightControlUnit {
         String rm20RequestString = "RM20 " + type + " \"" + text + "\" \" \" \" \"\r\n";
         tcp.send(rm20RequestString);
        
-
+        tcp.receive();
         String receivedAnswer = null;
         do {
             receivedAnswer = tcp.receive();
@@ -71,7 +68,7 @@ public class WeightControlUnit {
 
         String temp = rm20Request(4, "Operator");
         int split = temp.lastIndexOf(" ");
-
+        System.out.println(temp);
         try {
             loggedOperator = Integer.parseInt(temp.substring(split + 1));
             loggedIn = true;
