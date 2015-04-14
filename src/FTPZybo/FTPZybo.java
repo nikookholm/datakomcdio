@@ -1,7 +1,5 @@
 package FTPZybo;
 
-import java.util.ArrayList;
-
 public class FTPZybo {
 	
 	private TUI		  tui;
@@ -29,7 +27,7 @@ public class FTPZybo {
 			password = args[2];
 		}	
 		
-		FTPZybo fz = new FTPZybo(new TUI(), new Zybo(), new FTPClient(host, username, password));
+		new FTPZybo(new TUI(), new Zybo(), new FTPClient(host, username, password));
 		
 
 	}

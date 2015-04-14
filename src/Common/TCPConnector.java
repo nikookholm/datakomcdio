@@ -2,8 +2,6 @@ package Common;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 
 public class TCPConnector {
 	
