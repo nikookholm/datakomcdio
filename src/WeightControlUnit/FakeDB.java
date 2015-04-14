@@ -30,7 +30,7 @@ public class FakeDB {
 	private ArrayList<Items> stock  = new ArrayList<Items>();
 	private String			 filepathEclipse   = "";
 	private String			 filepathNeetbeans = "C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/";
-	private String			 filepath = filepathEclipse;
+	private String			 filepath = filepathNeetbeans;
 
 	// konstruktør til at skrive i loggen, denne fil skal altid forlænges
 	public FakeDB(){

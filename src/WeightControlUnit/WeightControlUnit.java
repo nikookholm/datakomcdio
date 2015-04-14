@@ -10,8 +10,8 @@ public class WeightControlUnit {
     //WCU_TUI TUI = new WCU_TUI();
     int loggedOperator = 0;
     double tarer = 0;
-   double brutto = 0;
-   Items Weight_item;
+    double brutto = 0;
+    Items Weight_item;
 
     public static void main(String[] args) {
 
@@ -85,7 +85,7 @@ public class WeightControlUnit {
             tarerWeight(false);
             // Minus brutto
             BruttoControl();
-             logItem();
+            logItem();
 
         }
     }
@@ -93,7 +93,7 @@ public class WeightControlUnit {
     public void tarerWeight(boolean save) {
         tcp.send("T\r\n");
         String inc_tarer = tcp.receive();
-        
+
         if (save) {
             int pos = inc_tarer.lastIndexOf(" ");
             inc_tarer = inc_tarer.substring(0, pos);
@@ -108,37 +108,44 @@ public class WeightControlUnit {
     public void NettoWeight() {
         tcp.send("S\r\n");
         String inc_brutto = tcp.receive();
-         int pos = inc_brutto.lastIndexOf(" ");
-            inc_brutto = inc_brutto.substring(0, pos);
-            pos = inc_brutto.lastIndexOf(" ");
-            inc_brutto = inc_brutto.substring(pos);
-            System.out.println(inc_brutto);
+        int pos = inc_brutto.lastIndexOf(" ");
+        inc_brutto = inc_brutto.substring(0, pos);
+        pos = inc_brutto.lastIndexOf(" ");
+        inc_brutto = inc_brutto.substring(pos);
+        System.out.println(inc_brutto);
         brutto = Double.parseDouble(inc_brutto);
     }
 
     public void logItem() {
         double netto = brutto - tarer;
-        if(netto >= 0){
-           rm20Request(8,"BRUTTO KONTROL OK");
-           tcp.receive();
+        if (netto >= 0) {
+            rm20Request(8, "BRUTTO KONTROL OK");
+            tcp.receive();
             System.out.println(Weight_item.getAmount());
             double totalRemaining = Weight_item.getAmount() - netto;
-            db.changeAmount(Weight_item.getItemName(), totalRemaining);
-            db.logWriter(loggedOperator, Weight_item.getName(), netto, totalRemaining);
+            try {
+                db.changeAmount(Weight_item.getItemName(), totalRemaining);
+                db.logWriter(loggedOperator, Weight_item.getItemName(), netto, totalRemaining);
+            } catch (Exception E) {
+
+            }
             changeStoreText();
-        }else{
+        } else {
             tcp.send("D \"FEJL \"\r\n");
-            
+
         }
-        
+
     }
-    
-    public void BruttoControl(){
-        String temp = rm20Request(8, brutto +" brutto korrekt? y/n");
+
+    public void BruttoControl() {
+        String temp = rm20Request(8, brutto + " brutto korrekt? y/n");
         String[] message = temp.split(" ");
-        if(!message[2].equals("y")){
-            
-            
+        if (!message[2].equals("y")) {
+            if (message[2].equals("n")) {
+                checkItem();
+            }
+            BruttoControl();
+
         }
     }
 
@@ -153,13 +160,16 @@ public class WeightControlUnit {
         try {
             itemNo = Integer.parseInt(temp.substring(split + 1));
             Items item = db.getItem(itemNo);
-            if(item == null){
+            System.out.println(item.toString() + " STRING");
+            if (item == null) {
                 checkItem();
             }
             tcp.send("D \"" + item.getItemName() + " \" \r\n");
             correctItem(item);
 
         } catch (Exception e) {
+            checkItem();
+
         }
 
     }
@@ -183,16 +193,14 @@ public class WeightControlUnit {
         String temp = rm20Request(8, item.getItemName() + " correct item? y/n");
         System.out.println("svar " + temp);
         String[] message = temp.split(" ");
-        
-                if (message[2].equals("y")) {
-                    System.out.println(item.getAmount() + " SVAAR");
+
+        if (message[2].equals("y")) {
+            System.out.println(item.getAmount() + " SVAAR");
             Weight_item = item;
-             
-             
-             
-        }else{
-                checkItem();
-                }
+
+        } else {
+            checkItem();
+        }
 
     }
 
