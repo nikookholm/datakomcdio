@@ -117,10 +117,12 @@ public class WeightControlUnit {
     public void logItem() {
         double netto = brutto - tarer;
         if(netto >= 0){
-            tcp.send("D \"BRUTTO KONTROL OK \"\r\n");
+           rm20Request(8,"BRUTTO KONTROL OK");
+           tcp.receive();
             System.out.println(Weight_item.getAmount());
             double totalRemaining = Weight_item.getAmount() - netto;
             db.changeAmount(Weight_item.getItemName(), totalRemaining);
+            changeStoreText();
         }else{
             tcp.send("D \"FEJL \"\r\n");
             
@@ -164,17 +166,8 @@ public class WeightControlUnit {
         tcp.receive();
     }
 
-    public void changeAmount(Items item) {
+    public void changeStoreText() {
 
-        double previousAmount = item.getAmount();
-        tcp.send("S\r\n");
-
-        String inc_weight = tcp.receive();
-        String[] weight_array = inc_weight.split(" ");
-
-        double weight = Double.parseDouble(weight_array[2]);
-
-        db.changeAmount(item.getItemName(), weight);
         try {
             db.changeStoreText();
         } catch (Exception e) {
@@ -191,12 +184,12 @@ public class WeightControlUnit {
                 if (message[2].equals("y")) {
                     System.out.println(item.getAmount() + " SVAAR");
             Weight_item = item;
-             changeAmount(item);
              
              
-        }
+             
+        }else{
                 checkItem();
-       
+                }
 
     }
 
