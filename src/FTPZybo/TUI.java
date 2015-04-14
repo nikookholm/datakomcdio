@@ -36,30 +36,39 @@ public class TUI {
 	
 	public String listFiles(ArrayList<String> files)
 	{
-		System.out.println("Alle filer på FTP serveren:");
-		
-		for (int i = 0; i < files.size(); i++)
+		if (files.size() > 0)
 		{
-			System.out.println("  " + (i+1) + ": " + files.get(i));
-		}
-		
-		System.out.println("\nFor at hente fil, indtast filens nummer, eller tryk enter ...");
-		
-		String input = scanner.nextLine();
-		int fileNumber = -1;
-		
-		try
-		{
-			fileNumber = (Integer.parseInt(input)-1);
-		} catch (Exception e) {}
-		
-		if ((fileNumber > 0) && (fileNumber <= files.size()))
-		{
-			int splitHere = files.get(fileNumber).lastIndexOf(" ");
-			return files.get(fileNumber).substring(splitHere).trim();
+			System.out.println("Alle filer på FTP serveren:");
+			
+			for (int i = 0; i < files.size(); i++)
+			{
+				System.out.println("  " + (i+1) + ": " + files.get(i));
+			}
+			
+			System.out.println("\nFor at hente fil, indtast filens nummer, eller tryk enter ...");
+			
+			String input = scanner.nextLine();
+			int fileNumber = -1;
+			
+			try
+			{
+				fileNumber = (Integer.parseInt(input)-1);
+			} catch (Exception e) {}
+			
+			if ((fileNumber > 0) && (fileNumber <= files.size()))
+			{
+				int splitHere = files.get(fileNumber).lastIndexOf(" ");
+				return files.get(fileNumber).substring(splitHere).trim();
+			}
+			else
+			{
+				return null;
+			}
 		}
 		else
 		{
+			System.out.println("Der er ikke adgang til filer på serveren, tryk enter for at fortsætte ...");
+			scanner.nextLine();
 			return null;
 		}
 		
