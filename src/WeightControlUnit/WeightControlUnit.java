@@ -14,25 +14,38 @@ public class WeightControlUnit {
     Items Weight_item;
 
     public static void main(String[] args) {
+        String host = "localhost";
+        int port = 4567;
+        if (args.length > 0) {
+            host = args[0];
 
-        new WeightControlUnit();
+        }
+        try{
+            if (args.length > 1) {
+                port = Integer.parseInt(args[1]);
+
+            }
+        } catch (NumberFormatException E) {
+        }
+        new WeightControlUnit(host, port);
 
     }
 
-    public WeightControlUnit() {
+    public WeightControlUnit(String ip, int port) {
         db = new FakeDB();
-        String host = "localhost";
-        int port = 4567;								// Skal sendes ned oppefra
-        tcp = new TCPConnector("localhost", 4567);
+        // Skal sendes ned oppefra
+        tcp = new TCPConnector(ip, port);
         Thread input = new Thread(new InputThread(), "");
         input.start();
 
         try {
             if (tcp.connect()) {
-                System.out.println("Forbindelse oprettet til " + host + " (Port " + port + ")");
+                System.out.println("Forbindelse oprettet til " + ip + " (Port " + port + ")");
             }
         } catch (Exception e) {
             System.out.println("Forbindelse kunne ikke oprettes ...");
+            System.out.println("Systemet afsluttes");
+            System.exit(0); 
         }
 
         login();
@@ -43,16 +56,14 @@ public class WeightControlUnit {
     private String rm20Request(int type, String text) {
         String rm20RequestString = "RM20 " + type + " \"" + text + "\" \" \" \" \"\r\n";
         tcp.send(rm20RequestString);
-        System.out.println("RM20 forspørgelse: " + rm20RequestString);
-
-        System.out.println("RM20 svar: " + tcp.receive());
+       
 
         String receivedAnswer = null;
         do {
             receivedAnswer = tcp.receive();
         } while (receivedAnswer.trim() == "");
 
-        System.out.println("RM20 Svar: " + receivedAnswer);
+        
         return receivedAnswer;
     }
 
@@ -154,13 +165,13 @@ public class WeightControlUnit {
         int itemNo;
 
         String temp = rm20Request(4, "Press item number");
-        System.out.println("Modtaget svar: " + temp);
+        
 
         int split = temp.lastIndexOf(" ");
         try {
             itemNo = Integer.parseInt(temp.substring(split + 1));
             Items item = db.getItem(itemNo);
-            System.out.println(item.toString() + " STRING");
+            
             if (item == null) {
                 checkItem();
             }
@@ -195,7 +206,7 @@ public class WeightControlUnit {
         String[] message = temp.split(" ");
 
         if (message[2].equals("y")) {
-            System.out.println(item.getAmount() + " SVAAR");
+            
             Weight_item = item;
 
         } else {
