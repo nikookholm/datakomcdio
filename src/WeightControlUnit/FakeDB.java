@@ -10,7 +10,11 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /*
  * Klassen fungerer som en database, og skriver til de to filer log.txt og store.txt.
@@ -26,7 +30,7 @@ public class FakeDB {
 	private ArrayList<Items> stock  = new ArrayList<Items>();
 	private String			 filepathEclipse   = "";
 	private String			 filepathNeetbeans = "C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/";
-	private String			 filepath = filepathNeetbeans;
+	private String			 filepath = filepathEclipse;
 
 	// konstruktør til at skrive i loggen, denne fil skal altid forlænges
 	public FakeDB(){
@@ -37,11 +41,18 @@ public class FakeDB {
 		}
 	}
 
-	public void logWriter(String text) throws IOException{
-		FileWriter fw = new FileWriter(path, append);
+	
+	public void logWriter(int oprID, String itemName, double netto, double remaining) throws IOException{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		System.out.println(dateFormat.format(cal.getTime()));
+		
+		
+		
+		FileWriter fw = new FileWriter("log.txt", true);
 		PrintWriter printText = new PrintWriter(fw);
 
-		printText.printf("%s" + "%n", text);
+		printText.printf("%s" + "%n", dateFormat.format(cal.getTime()) + "," +oprID + "," + netto + "," + remaining );
 		printText.close();
 	}
 
