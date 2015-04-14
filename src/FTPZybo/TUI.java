@@ -38,7 +38,7 @@ public class TUI {
 	{
 		System.out.println("Alle filer på FTP serveren:");
 		
-		for (int i = 0; i < files.size(); i++)
+		for (int i = 1; i <= files.size(); i++)
 		{
 			System.out.println("  " + i + ": " + files.get(i));
 		}
