@@ -4,49 +4,49 @@ import Common.*;
 
 public class WeightControlUnit {
 
-    FakeDB 		 DB;
-    TCPConnector TCPC;
+    FakeDB 		 db;
+    TCPConnector tcp;
     boolean		 loggedIn = false;
     //WCU_TUI TUI = new WCU_TUI();
     
     public static void main(String[] args) {
 
-        WeightControlUnit WCU = new WeightControlUnit();
+        new WeightControlUnit();
 
     }
     
     public WeightControlUnit() {
-        DB   		= new FakeDB();
+        db   		= new FakeDB();
         String host = "localhost";
         int    port = 4567;								// Skal sendes ned oppefra
-        TCPC 		= new TCPConnector("localhost", 4567);
+        tcp 		= new TCPConnector("localhost", 4567);
         
         try {
-            if (TCPC.connect())
+            if (tcp.connect())
             {
             	System.out.println("Forbindelse oprettet til " + host + " (Port " + port + ")");
             }            
-        } catch (Exception E) {
+        } catch (Exception e) {
         	System.out.println("Forbindelse kunne ikke oprettes ...");
         }
         
         login();
-        OperateWeight();
+        operateWeight();
 
     }
     
     private String rm20Request(int type, String text)
     {
     	String rm20RequestString = "RM20 " + type + " \"" + text + "\" \" \" \" \"\r\n";
-    	TCPC.send("RM20 forspørgelse: " + rm20RequestString);
+    	tcp.send("RM20 forspørgelse: " + rm20RequestString);
     	System.out.println(rm20RequestString);
     	
-    	System.out.println("RM20 svar: " + TCPC.receive());
+    	System.out.println("RM20 svar: " + tcp.receive());
     	
     	String receivedAnswer = null;
     	do
     	{
-    		receivedAnswer = TCPC.receive();
+    		receivedAnswer = tcp.receive();
     	} while (receivedAnswer.trim() == "");
     	
     	System.out.println("RM20 Svar: " + receivedAnswer);
@@ -59,22 +59,22 @@ public class WeightControlUnit {
         int    split = temp.lastIndexOf(" ");
         
         try {
-            int oprNR = Integer.parseInt(temp.substring(split + 1));
+            int oprNr = Integer.parseInt(temp.substring(split + 1));
             loggedIn = true;
             return true;
-        } catch (Exception E) {
+        } catch (Exception e) {
         	loggedIn = false;
             return false;
         }
 
     }
 
-    public void OperateWeight() {
+    public void operateWeight() {
     	
-        while (loggedIn) {
-            System.out.println("Here?");        	
+        while (loggedIn) {        	
+        	
             checkItem();
-            SendInstruction("Hej");
+            sendInstruction("Hej");
             
         }
     }
@@ -87,38 +87,41 @@ public class WeightControlUnit {
         System.out.println("Modtaget svar: " + temp);
         
         int split = temp.lastIndexOf(" ");
-        try {
+        try
+        {
             itemNo = Integer.parseInt(temp.substring(split + 1));
-            Items Item = DB.getItem(itemNo);
-            TCPC.send("D \""+ Item.getItemName() +" \" \r\n");
-            CorrectItem(Item);
-        } catch (Exception e){}
+            Items item = db.getItem(itemNo);
+            tcp.send("D \""+ item.getItemName() +" \" \r\n");
+            correctItem(item);
+            
+        } catch (Exception e) {}
     
     }
 
-    public void SendInstruction(String instruc) {
-        TCPC.send("D \"Hi\" \r \n");
-        TCPC.receive();
+    public void sendInstruction(String instruction) {
+        tcp.send("D \"" + instruction + "\" \r \n");
+        tcp.receive();
     }
 
-    public void ChangeAmount(Items Item) {
+    public void changeAmount(Items item) {
        
-        double previousAmount = Item.getAmount();
-        TCPC.send("S\r\n");
+        double previousAmount = item.getAmount();
+        tcp.send("S\r\n");
         
-        String inc_weight = TCPC.receive();
+        String inc_weight = tcp.receive();
         String[] weight_array = inc_weight.split(" ");
         
         double weight = Double.parseDouble(weight_array[2]); 
         
-        DB.changeAmount(Item.getItemName(), weight);
-        try{
-        	DB.changeStoreText();
-        } catch(Exception E ){}
+        db.changeAmount(item.getItemName(), weight);
+        try
+        {
+        	db.changeStoreText();
+        } catch (Exception e) {}
         
     }
 
-    public void CorrectItem(Items Item) {
+    public void correctItem(Items item) {
     	
         String temp = rm20Request(8, "CorrectItem?");
         
@@ -126,7 +129,7 @@ public class WeightControlUnit {
 	        checkItem();
         }
         
-        ChangeAmount(Item);
+        changeAmount(item);
         
     }
 
