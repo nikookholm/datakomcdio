@@ -12,9 +12,10 @@ import FTPZybo.FTPClient;
 /**
  * 
  * This test assumes the user has access to a server with the parameters given in FTP signature,
- * and furthermore, a file with the given name.
+ * it needs files for the retr to function; a file with the given name.
  *
  */
+
 public class TestFTPClient {
 	FTPClient ftp = new FTPClient("localhost", "user", "qwerty");
 	String testFileName = "testting.txt";

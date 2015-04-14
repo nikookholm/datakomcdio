@@ -5,9 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import Common.TCPConnector;
-
+/**
+ * 
+ * A FTP-Clients, which supports a listing of files on the server,
+ * and the retrieval of a specified file.
+ *
+ */
 public class FTPClient {
 
 	private String 		host;
