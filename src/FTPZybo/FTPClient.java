@@ -31,6 +31,7 @@ public class FTPClient {
 		int otherPort 	= 0;
 		String answer 	= "";
 		String data 	= "";
+		ArrayList<String> ls;
 		
 		try{	
 			initiateConnection(user , pswd);
@@ -48,13 +49,14 @@ public class FTPClient {
 			data = tcpData.receive();
 			tcpData.disconnect();
 			
+			String[] strValues = data.split("\r\n");
+			ls = new ArrayList<String>(Arrays.asList(strValues));
+			
 		}catch(Exception e){
-			e.printStackTrace();
+			ls = new ArrayList<String>();
+		
 		}
 			tcp.disconnect();
-			
-			String[] strValues = data.split("\r\n");
-			ArrayList<String> ls = new ArrayList<String>(Arrays.asList(strValues));
 			
 			return ls;
 	}
