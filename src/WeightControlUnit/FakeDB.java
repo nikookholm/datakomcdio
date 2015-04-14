@@ -14,7 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
 
 /*
  * Klassen fungerer som en database, og skriver til de to filer log.txt og store.txt.
@@ -25,12 +25,11 @@ import java.util.Date;
 
 public class FakeDB {
 
-	private	String			 path;
-	private boolean			 append = false;
+	
 	private ArrayList<Items> stock  = new ArrayList<Items>();
 	private String			 filepathEclipse   = "";
-	private String			 filepathNeetbeans = "C:\\Users\\Thomas Elbo\\Documents\\GitHub\\datakomcdio/";
-	private String			 filepath = filepathNeetbeans;
+
+	private String			 filepath = filepathEclipse;
 
 	// konstruktør til at skrive i loggen, denne fil skal altid forlænges
 	public FakeDB(){
@@ -62,27 +61,21 @@ public class FakeDB {
 		try {
 
 			StringBuilder	sb	   = new StringBuilder();
-			FileInputStream textIn = new FileInputStream(filepath + "store.txt");
-			BufferedReader	br	   = new BufferedReader(new InputStreamReader(textIn));
-
-			try{
+		
 
 				for (int i = 0; i < stock.size(); i++) {
 					sb.append(stock.get(i).getItemNo() + "," + stock.get(i).getItem() + "," + stock.get(i).getAmount() );
 					sb.append("\n");
 				}
 
-			}
-			catch(Exception e){// skal nok se på en bedre  exception.
-				System.out.println("råvare kan ikke findes");
-			}
+
 			FileWriter fstreamWrite = new FileWriter(filepath + "store.txt");
 			BufferedWriter out = new BufferedWriter(fstreamWrite);
 			out.write(sb.toString());
 
 			out.close(); // closes writer
 
-			textIn.close(); //This closes inputStream
+		
 
 		} catch (Exception e) {// skal nok lave en bedre exception end dette
 			System.err.println("Fejl: " + e.getMessage());
@@ -132,3 +125,5 @@ public class FakeDB {
 
 
 }
+
+
