@@ -52,12 +52,11 @@ public class FTPClient {
 			String[] strValues = data.split("\r\n");
 			ls = new ArrayList<String>(Arrays.asList(strValues));
 			
-		}catch(Exception e){
-			ls = new ArrayList<String>();
-		
-		}
 			tcp.disconnect();
 			
+		}catch(Exception e){
+			ls = new ArrayList<String>();
+		}
 			return ls;
 	}
 
@@ -90,9 +89,7 @@ public class FTPClient {
 					FileWriter writer = new FileWriter(file);
 					writer.write(data);
 					writer.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				}catch(IOException e1) { }
 				tcpData.disconnect();
 				
 				answer = tcp.receive();
@@ -100,11 +97,8 @@ public class FTPClient {
 					bool = true;
 				}
 			}
-			
-			
-			
-		}catch(Exception e){
-		}
+
+		}catch(Exception e){}
 			tcp.disconnect();
 			
 			return bool;
@@ -121,8 +115,7 @@ public class FTPClient {
 			tcp.send("PASS " + pswd);
 			tcp.receive();
 			
-		} catch (Exception e) {
-		}
+		} catch (Exception e) { }
 	}
 	
 	//Calculates the new IP address and port number, when connecting to PASV mode
