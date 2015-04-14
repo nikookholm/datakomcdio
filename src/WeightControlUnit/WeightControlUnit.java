@@ -124,6 +124,7 @@ public class WeightControlUnit {
             System.out.println(Weight_item.getAmount());
             double totalRemaining = Weight_item.getAmount() - netto;
             db.changeAmount(Weight_item.getItemName(), totalRemaining);
+            db.logWriter(loggedOperator, Weight_item.getName(), netto, totalRemaining);
             changeStoreText();
         }else{
             tcp.send("D \"FEJL \"\r\n");
