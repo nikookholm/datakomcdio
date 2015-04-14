@@ -10,17 +10,27 @@ public class FTPZybo {
 
 	public static void main(String[] args) {
 	
+		String host		= "localhost";
+		String username = "user";
+		String password = "qwerty";
 		
-//		if (args.length > 1)
-//		{
-//			String host = args[0];
-			String host = "localhost";
-			FTPZybo fz = new FTPZybo(new TUI(), new Zybo(), new FTPClient(host));
-//		}
-//		else
-//		{
-//			System.out.println("Du har ikke angivet IP adresse til FTP serveren som det første argument, programmet lukkes!");
-//		}
+		if (args.length > 0)
+		{
+			host = args[0];
+		}
+		
+		if (args.length > 1)
+		{
+			username = args[1];
+		}
+		
+		if (args.length > 2)
+		{
+			password = args[2];
+		}	
+		
+		FTPZybo fz = new FTPZybo(new TUI(), new Zybo(), new FTPClient(host, username, password));
+		
 
 	}
 	
@@ -34,7 +44,6 @@ public class FTPZybo {
 			operations(tui.printMenu());
 		}
 	}
-	
 	
 	public void operations(String menuChoice)
 	{
