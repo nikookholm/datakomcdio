@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import Common.TCPConnector;
 
@@ -15,12 +14,12 @@ public class FTPClient {
 	private int 		port = 21;
 	private String		user;
 	private String		pswd;
-	private TCPConnector tcp = new TCPConnector(host, port);
+	private TCPConnector tcp = new TCPConnector(host , port);
 	
-	public FTPClient(String hostAddress, String userName, String password){
+	public FTPClient(String hostAddress , String userName , String password){
 		host = hostAddress;
-		user = "user";//userName;
-		pswd = "qwerty";//password;
+		user = userName;
+		pswd = password;
 	}
 	
 	//LIST
@@ -34,13 +33,13 @@ public class FTPClient {
 		
 			tcp.send("PASV\r\n");
 			answer = tcp.receive();
-			if(answer.isEmpty()==false){
+			if(answer.isEmpty() == false){
 				otherPort = calculatePort(answer); //Calculating IP address and the new port number
 			}
 			tcp.send("LIST\r\n");
 			
 			//Opens the data connection
-			TCPConnector tcpData = new TCPConnector(host, otherPort);
+			TCPConnector tcpData = new TCPConnector(host , otherPort);
 			tcpData.connect();
 			data = tcpData.receive();
 			tcpData.disconnect();
@@ -58,7 +57,7 @@ public class FTPClient {
 
 	//RETR
 	public boolean retr(String str){
-		boolean bool = false;
+		boolean bool 	= false;
 		int otherPort 	= 0;
 		String answer 	= "";
 		String data 	= "";
@@ -69,11 +68,11 @@ public class FTPClient {
 			
 			tcp.send("PASV\r\n");
 			answer = tcp.receive();
-			if(answer.isEmpty()==false){
+			if(answer.isEmpty() == false){
 				otherPort = calculatePort(answer); //Calculating IP address and new port number
 			}
 			tcp.send("RETR " + str + "\r\n");
-			TCPConnector tcpData = new TCPConnector(host, otherPort);
+			TCPConnector tcpData = new TCPConnector(host , otherPort);
 			tcpData.connect();
 			data = tcpData.receive();
 			
@@ -101,7 +100,7 @@ public class FTPClient {
 	}
 	
 	//Initiates connection to server and logs in with user and password
-	private void initiateConnection(String 	user, String pswd){
+	private void initiateConnection(String user , String pswd){
 		user = user + "\r\n";
 		pswd = pswd + "\r\n";
 		
@@ -114,18 +113,17 @@ public class FTPClient {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	//Calculates the new IP address and port number, when connecting to PASV mode
 	private int calculatePort(String ip){
-		int newPort;
-		String h1, p1, p2;
-		int pi1, pi2;
+		int 	newPort;
+		int 	pi1, pi2;
+		String 	h1, p1, p2;
 		
 		ip = ip.substring(0, ip.indexOf(')'));
 		
-		if(ip.charAt(0)!='1'){
+		if(ip.charAt(0) != '1'){
 			for(int i=0 ; i<4 ; i++){
 				ip = ip.substring(ip.indexOf(',')+1);
 			}
