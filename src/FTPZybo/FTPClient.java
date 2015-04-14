@@ -104,7 +104,6 @@ public class FTPClient {
 			
 			
 		}catch(Exception e){
-			e.printStackTrace();
 		}
 			tcp.disconnect();
 			
@@ -123,7 +122,6 @@ public class FTPClient {
 			tcp.receive();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	
