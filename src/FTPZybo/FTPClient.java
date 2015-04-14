@@ -72,24 +72,30 @@ public class FTPClient {
 				otherPort = calculatePort(answer); //Calculating IP address and new port number
 			}
 			tcp.send("RETR " + str + "\r\n");
+			answer = tcp.receive();
+			
 			TCPConnector tcpData = new TCPConnector(host , otherPort);
 			tcpData.connect();
 			data = tcpData.receive();
 			
-			try {
-				File file = new File(strName);
-				FileWriter writer = new FileWriter(file);
-				writer.write(data);
-				writer.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if((answer.startsWith("550")) == false){
+				try {
+					File file = new File(strName);
+					FileWriter writer = new FileWriter(file);
+					writer.write(data);
+					writer.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				tcpData.disconnect();
+				
+				answer = tcp.receive();
+				if(answer.endsWith("226 Transfer complete") == true){
+					bool = true;
+				}
 			}
-			tcpData.disconnect();
 			
-			answer = tcp.receive();
-			if(answer.endsWith("226 Transfer complete") == true){
-				bool = true;
-			}
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
