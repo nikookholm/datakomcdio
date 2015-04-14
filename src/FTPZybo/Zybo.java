@@ -49,7 +49,10 @@ public class Zybo {
 		
 		for (int i = 0 ; i < sensorsValues.length; i++)
 		{
-			sensorsList.add(i);
+			if (sensorsActive[i])
+			{
+				sensorsList.add(i);
+			}
 		}
 		
 		return sensorsList;
