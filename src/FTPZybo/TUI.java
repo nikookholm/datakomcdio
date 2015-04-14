@@ -50,7 +50,7 @@ public class TUI {
 		
 		try
 		{
-			fileNumber = Integer.parseInt(input);
+			fileNumber = (Integer.parseInt(input)-1);
 		} catch (Exception e) {}
 		
 		if ((fileNumber > 0) && (fileNumber <= files.size()))
