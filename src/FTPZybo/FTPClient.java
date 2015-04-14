@@ -11,131 +11,87 @@ import Common.TCPConnector;
 
 public class FTPClient {
 
-	private ArrayList 	filesLs = new ArrayList();
 	private String 		host;
 	private int 		port = 21;
+	private String		user;
+	private String		pswd;
 	private TCPConnector tcp = new TCPConnector(host, port);
-	private String h1, p1, p2;
 	
-	//
-	public FTPClient(String hostAddress){
+	public FTPClient(String hostAddress, String userName, String password){
 		host = hostAddress;
-		System.out.println("FTP constructor host: " + host);
+		user = "user";//userName;
+		pswd = "qwerty";//password;
 	}
 	
-	//returns infomation about the current file or directory
 	//LIST
   	public ArrayList<String> list(){
 		int otherPort 	= 0;
-		String read 	= "";
-		String read2 	= "";
-		//ArrayList<String> ls = new ArrayList<String>();
+		String answer 	= "";
+		String data 	= "";
 		
 		try{	
-			initiateConnection();
+			initiateConnection(user , pswd);
 		
-			//Enter passive mode
 			tcp.send("PASV\r\n");
-			System.out.println("Client: PASV");
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-			
-			//Calculating IP address and port number
-			if(read.isEmpty()==false){
-				otherPort = calculatePort(read);
+			answer = tcp.receive();
+			if(answer.isEmpty()==false){
+				otherPort = calculatePort(answer); //Calculating IP address and the new port number
 			}
-			//Sends a list of files in the current directory
 			tcp.send("LIST\r\n");
-			System.out.println("Client: LIST");
-			//read = tcp.receive();
-			System.out.println("Server: " + read);
 			
-			// Åbner dataforbindelse
-			System.out.println("Host: " + host);
-			TCPConnector tcp2 = new TCPConnector(host, otherPort);
-			tcp2.connect();
-			
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-			
-			read2 = tcp2.receive();
-			System.out.println("Server2: " + read2);
-			tcp2.disconnect();
-			
-			read = tcp.receive();
-			System.out.println("Server: " + read);
+			//Opens the data connection
+			TCPConnector tcpData = new TCPConnector(host, otherPort);
+			tcpData.connect();
+			data = tcpData.receive();
+			tcpData.disconnect();
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 			tcp.disconnect();
 			
-			//Omformer read til en ArrayList
-			String[] strValues = read2.split("\r\n");
+			String[] strValues = data.split("\r\n");
 			ArrayList<String> ls = new ArrayList<String>(Arrays.asList(strValues));
-			
-			System.out.println("StrVal: " + strValues.length);
-			System.out.println("LS: " + ls);
 			
 			return ls;
 	}
 
 
-	//downloads the specified file from the server
 	//RETR
 	public boolean retr(String str){
-		//str = "testting.txt"; //Korrekt
-		//str = "fejl.txt";
 		boolean bool = false;
 		int otherPort 	= 0;
-		String read 	= "";
-		String read2 	= "";
+		String answer 	= "";
+		String data 	= "";
 		String strName 	= str;
-		String type;
-		
-		type = str.substring(str.indexOf('.'));
 		
 		try{
-			initiateConnection();
+			initiateConnection(user , pswd);
 			
 			tcp.send("PASV\r\n");
-			System.out.println("Client: " + read);
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-			
-			//Calculating IP address and port number
-			if(read.isEmpty()==false){
-				otherPort = calculatePort(read);
+			answer = tcp.receive();
+			if(answer.isEmpty()==false){
+				otherPort = calculatePort(answer); //Calculating IP address and new port number
 			}
-			
-			//Initiates retreval of file
 			tcp.send("RETR " + str + "\r\n");
-			System.out.println("Client: RETR " + str + "\r\n");
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-		
-			System.out.println("Opretter dataconnection");
-			TCPConnector tcp2 = new TCPConnector(host, otherPort);
-			tcp2.connect();
-			System.out.println("Har oprettet dataconnection");
-			
-			read2 = tcp2.receive();
-			System.out.println("Server2 read2: " + read2);
+			TCPConnector tcpData = new TCPConnector(host, otherPort);
+			tcpData.connect();
+			data = tcpData.receive();
 			
 			try {
-				System.out.println("Opretter fil...");
 				File file = new File(strName);
 				FileWriter writer = new FileWriter(file);
-				writer.write(read2);
+				writer.write(data);
 				writer.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			System.out.println("Jeg disconnecter dataforbindelsen");
-			tcp2.disconnect();
+			tcpData.disconnect();
 			
-			read = tcp.receive();
-			System.out.println("Server: " + read);
+			answer = tcp.receive();
+			if(answer.endsWith("226 Transfer complete") == true){
+				bool = true;
+			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -146,27 +102,17 @@ public class FTPClient {
 	}
 	
 	
-	//Opretter forbindelse til FTP-serveren og logger ind med bruger og kodeord
-	private void initiateConnection(){
-		String 	user = "user\r\n";
-		String 	pswd = "qwerty\r\n";
+	//Initiates connection to server and logs in with user and password
+	private void initiateConnection(String 	user, String pswd){
+		user = user + "\r\n";
+		pswd = pswd + "\r\n";
 		String	read = "";
 		
 		try {
 			tcp.connect();
-			System.out.println("Client: Connector til: " + host + ", ved port: " + port);
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-			
 			tcp.send("USER " + user);
-			System.out.println("Client: Sends USER " + user);
-			read = tcp.receive();
-			System.out.println("Server: " + read);
-			
 			tcp.send("PASS " + pswd);
-			System.out.println("Client: Sends PASS " + pswd);
 			read = tcp.receive();
-			System.out.println("Server: " + read);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -177,6 +123,7 @@ public class FTPClient {
 	//Calculates the new IP address and port number, when connecting to PASV mode
 	private int calculatePort(String ip){
 		int newPort;
+		String h1, p1, p2;
 		int pi1, pi2;
 		
 		ip = ip.substring(0, ip.indexOf(')'));
@@ -186,8 +133,8 @@ public class FTPClient {
 				ip = ip.substring(ip.indexOf(',')+1);
 			}
 
-			String p1 = ip.substring(0, ip.indexOf(','));
-			String p2 = ip.substring(ip.indexOf(',')+1);
+			p1 = ip.substring(0, ip.indexOf(','));
+			p2 = ip.substring(ip.indexOf(',')+1);
 			
 			pi1 = Integer.parseInt(p1);
 			pi2 = Integer.parseInt(p2);
@@ -204,13 +151,9 @@ public class FTPClient {
 		}
 		
 		newPort = pi1*256+pi2;
-		System.out.println("newPort: " + newPort);
 		
 		return newPort;
 		
 	}
-	
-	
-	
 	
 }
