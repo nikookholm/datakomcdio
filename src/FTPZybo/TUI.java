@@ -68,7 +68,7 @@ public class TUI {
 		else
 		{
 			System.out.println("Der er ikke adgang til filer på serveren, tryk enter for at fortsætte ...");
-			String input = scanner.nextLine();
+			scanner.nextLine();
 			return null;
 		}
 		
