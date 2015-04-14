@@ -44,7 +44,7 @@ public class FakeDB {
 	public void logWriter(int oprID, String itemName, double netto, double remaining) throws IOException{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		System.out.println(dateFormat.format(cal.getTime()));
+
 		
 		
 		
